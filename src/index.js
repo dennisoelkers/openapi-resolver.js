@@ -5,8 +5,8 @@ import cloneDeepWith from 'lodash.clonedeepwith';
 // eslint-disable-next-line import/no-named-as-default
 import $RefParser from './refParser.js';
 
-async function resolver(specUrlOrObject) {
-  const result = await dereference(specUrlOrObject);
+async function resolver(specUrlOrObject, userOptions = {}) {
+  const result = await dereference(specUrlOrObject, userOptions);
 
   const refStack = [];
   const keyPath = [];
@@ -60,10 +60,10 @@ async function resolver(specUrlOrObject) {
   // return specWithReferences;
 }
 
-async function dereference(specUrlOrObject) {
+async function dereference(specUrlOrObject, userOptions = {}) {
   const parser = new $RefParser();
 
-  const options = { dereference: { circular: 'ignore' } };
+  const options = { dereference: { circular: 'ignore' }, ...userOptions };
   if (typeof specUrlOrObject === 'object') {
     if (typeof specUrlOrObject.href === 'string') {
       await parser.dereference(specUrlOrObject.toString(), options);
